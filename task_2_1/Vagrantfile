@@ -1,0 +1,84 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+Vagrant.configure("2") do |config|
+
+  config.vm.define "ng_1" do |ng_1|
+    ng_1.vm.box = "generic/ubuntu2004"
+    ng_1.vm.box_check_update = false
+    ng_1.vm.hostname = "ng1"
+    ng_1.vm.network "private_network", ip: "10.10.2.3"
+    config.vm.provision "file", source: "files/vagrant_key.pub", destination: "/home/vagrant/.ssh/"
+    config.vm.provision "file", source: "files/nginx.conf", destination: "/home/vagrant/nginx/"
+    config.vm.provision "file", source: "files/html-1/index.html", destination: "/home/vagrant/html/"
+    ng_1.vm.provision "shell", inline: <<-SHELL
+        sudo apt-get install ca-certificates curl gnupg lsb-release
+        sudo mkdir -m 0755 -p /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu0 \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update && sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        chmod 600 /home/vagrant/.ssh/vagrant_key.pub
+        cat /home/vagrant/.ssh/vagrant_key.pub >> /home/vagrant/.ssh/authorized_keys
+    SHELL
+  end
+
+    config.vm.define "ng_2" do |ng_2|
+    ng_2.vm.box = "generic/ubuntu2004"
+    ng_2.vm.box_check_update = false
+    ng_2.vm.hostname = "ng2"
+    ng_2.vm.network "private_network", ip: "10.10.2.4"
+    config.vm.provision "file", source: "files/vagrant_key.pub", destination: "/home/vagrant/.ssh/"
+    config.vm.provision "file", source: "files/nginx.conf", destination: "/home/vagrant/nginx/"
+    config.vm.provision "file", source: "files/html-2/index.html", destination: "/home/vagrant/html/"
+    ng_2.vm.provision "shell", inline: <<-SHELL
+        sudo apt-get install ca-certificates curl gnupg lsb-release
+        sudo mkdir -m 0755 -p /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update && sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        chmod 600 /home/vagrant/.ssh/vagrant_key.pub
+        cat /home/vagrant/.ssh/vagrant_key.pub >> /home/vagrant/.ssh/authorized_keys
+    SHELL
+  end
+
+    config.vm.define "hk_1" do |hk_1|
+    hk_1.vm.box = "generic/ubuntu2004"
+    hk_1.vm.box_check_update = false
+    hk_1.vm.hostname = "hk1"
+    hk_1.vm.network "private_network", ip: "10.10.2.5"
+    config.vm.provision "file", source: "files/vagrant_key.pub", destination: "/home/vagrant/.ssh/"
+    config.vm.provision "file", source: "files/haproxy.cfg", destination: "/home/vagrant/haproxy/"
+    hk_1.vm.provision "shell", inline: <<-SHELL
+        sudo apt-get install ca-certificates curl gnupg lsb-release
+        sudo mkdir -m 0755 -p /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update && sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        chmod 600 /home/vagrant/.ssh/vagrant_key.pub
+        cat /home/vagrant/.ssh/vagrant_key.pub >> /home/vagrant/.ssh/authorized_keys
+    SHELL
+  end
+
+    config.vm.define "hk_2" do |hk_2|
+    hk_2.vm.box = "generic/ubuntu2004"
+    hk_2.vm.box_check_update = false
+    hk_2.vm.hostname = "hk2"
+    hk_2.vm.network "private_network", ip: "10.10.2.6"
+    config.vm.provision "file", source: "files/vagrant_key.pub", destination: "/home/vagrant/.ssh/"
+    config.vm.provision "file", source: "files/haproxy.cfg", destination: "/home/vagrant/haproxy/"
+    hk_2.vm.provision "shell", inline: <<-SHELL
+        sudo apt-get install ca-certificates curl gnupg lsb-release
+        sudo mkdir -m 0755 -p /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update && sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        chmod 600 /home/vagrant/.ssh/vagrant_key.pub
+        cat /home/vagrant/.ssh/vagrant_key.pub >> /home/vagrant/.ssh/authorized_keys
+    SHELL
+  end
+end

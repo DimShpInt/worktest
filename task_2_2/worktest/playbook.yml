@@ -1,0 +1,14 @@
+# HAProxy Keepalived Nginx #
+---
+- name: "install hapoxy keepalived"
+  hosts: host_hapoxy_keepalived
+  become: true
+  roles:
+    - haproxy
+    - keepalived
+
+- name: "install nginx"
+  hosts: host_nginx
+  become: true
+  roles:
+    - nginx

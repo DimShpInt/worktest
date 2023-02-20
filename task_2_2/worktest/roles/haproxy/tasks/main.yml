@@ -1,0 +1,19 @@
+  - name: "install haproxy"
+    ansible.builtin.apt:
+      name: haproxy
+      update_cache: yes
+      state: latest
+
+  - name: "replace default config"
+    ansible.builtin.template:
+      src: files/haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+      owner: vagrant
+      group: vagrant
+      mode: 0644
+
+  - name: "reload haproxy"
+    service:
+      name: haproxy
+      enabled: yes
+      state: reloaded

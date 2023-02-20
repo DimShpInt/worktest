@@ -1,0 +1,31 @@
+  - name: "install nginx"
+    ansible.builtin.apt:
+      name: nginx
+      update_cache: yes
+      state: latest
+
+  - name: "replace default config"
+    ansible.builtin.template:
+      src: files/nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+      owner: vagrant
+      group: vagrant
+      mode: 0644
+
+  - name: "delete html old folder"
+    ansible.builtin.file:
+      path: /var/www/html
+      state: absent
+
+  - name: "replace default html"
+    ansible.builtin.template:
+      src: files/html/index.html
+      dest: /var/www/html/
+      owner: vagrant
+      group: vagrant
+      mode: 0644
+
+  - name: "reload nginx"
+    service:
+      name: nginx
+      state: reloaded
